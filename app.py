@@ -5,7 +5,7 @@ from catboost import CatBoostClassifier
 app = Flask(__name__)
 
 # تحميل نموذج CatBoost المدرب مسبقًا
-MODEL_PATH = r"C:\Users\Mohammed_Azizi\Desktop\gradution\gradution - Copy\model.cbm" # استخدم r"" للمسارات لتجنب مشاكل الشرطة المائلة العكسية
+MODEL_PATH = "model.cbm" # استخدم r"" للمسارات لتجنب مشاكل الشرطة المائلة العكسية
 try:
     model = CatBoostClassifier()
     model.load_model(MODEL_PATH)
