@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">تقييم مخاطر مرض السكري</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet">
+    <link id="bootstrap-rtl-css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet" integrity="sha384-DOXMLfHhQkvFFp+rWTZwVlPVqdIhpDVYT9csKHSvbAtrpaddingNearStatusLightsSArestore8A" crossorigin="anonymous">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --diabetes-blue: #0078D4;
+            --primary-hover: #005A9E; 
+            --light-blue-bg: #EBF4FB;
+            --text-dark: #2C3E50;
+            --text-light: #7F8C9A;
+            --white: #ffffff;
+            --border-color: #DDE6ED;
+            --card-shadow: 0 10px 30px rgba(0, 120, 212, 0.1);
+        }
+        
+        body {
+            /* Font family will be set by JS */
+            background-color: var(--light-blue-bg);
+            color: var(--text-dark);
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; /* Allow lang-switcher to be at top */
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+            transition: font-family 0.3s ease;
+        }
+
+        .lang-switcher {
+            position: fixed;
+            top: 15px;
+            right: 15px; /* Adjusted for RTL default */
+            z-index: 1000;
+            background-color: var(--white);
+            padding: 5px 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        html[dir="ltr"] .lang-switcher {
+            right: auto;
+            left: 15px;
+        }
+
+
+        .lang-switcher button {
+            background-color: transparent;
+            border: none;
+            color: var(--diabetes-blue);
+            padding: 5px 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .lang-switcher button:hover, .lang-switcher button.active {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+        
+        .container {
+            max-width: 850px; 
+            width: 100%;
+            margin-top: 70px; /* Increased margin to avoid overlap with lang-switcher */
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            border: none; 
+            border-radius: 20px; 
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            background-color: var(--white);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--diabetes-blue) 0%, #0095FF 100%); 
+            color: var(--white);
+            padding: 30px 35px;
+            border-bottom: none; 
+            text-align: center; 
+        }
+        
+        .card-header h1 {
+            font-size: 2rem; 
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+        
+        .card-body {
+            padding: 35px 45px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 10px; 
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px; 
+            border: 1px solid var(--border-color);
+            padding: 12px 18px; 
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            background-color: #F9FAFB; 
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .form-control::placeholder {
+            color: var(--text-light);
+            opacity: 0.8;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--diabetes-blue);
+            box-shadow: 0 0 0 0.25rem rgba(0, 120, 212, 0.2); 
+            background-color: var(--white);
+        }
+        
+        .form-check-label {
+            color: var(--text-dark); 
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        /* RTL specific for checkbox label padding */
+        html[dir="rtl"] .form-check-label { padding-right: 10px; padding-left: 0; }
+        /* LTR specific for checkbox label padding */
+        html[dir="ltr"] .form-check-label { padding-left: 10px; padding-right: 0; }
+
+        .form-check-input {
+            border-radius: 5px; 
+            border: 1.5px solid var(--border-color);
+            cursor: pointer;
+            width: 1.2em; 
+            height: 1.2em;
+            margin-top: 0.2em; 
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--diabetes-blue);
+            border-color: var(--diabetes-blue);
+        }
+
+        .form-check-input:focus {
+            box-shadow: 0 0 0 0.25rem rgba(0, 120, 212, 0.2);
+        }
+
+        .form-check {
+            margin-bottom: 1rem; 
+        }
+        /* RTL specific for checkbox alignment */
+        html[dir="rtl"] .form-check { padding-right: 2.25rem; padding-left: 0; }
+        html[dir="rtl"] .form-check .form-check-input { margin-right: -2.25rem; margin-left: 0; }
+        /* LTR specific for checkbox alignment */
+        html[dir="ltr"] .form-check { padding-left: 2.25rem; padding-right: 0; }
+        html[dir="ltr"] .form-check .form-check-input { margin-left: -2.25rem; margin-right: 0; }
+        
+        .btn-primary {
+            background-color: var(--diabetes-blue);
+            border-color: var(--diabetes-blue);
+            padding: 14px 40px; 
+            border-radius: 10px; 
+            font-weight: 600;
+            text-transform: uppercase; 
+            letter-spacing: 0.8px; 
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.2);
+            transition: all 0.2s ease;
+            color: var(--white);
+            font-size: 1rem;
+        }
+        
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: var(--primary-hover); 
+            border-color: var(--primary-hover);
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 20px rgba(0, 120, 212, 0.3);
+        }
+        
+        .btn-primary i {
+            /* Adjusted by LTR/RTL specific rules */
+        }
+        html[dir="rtl"] .btn-primary i { margin-left: 10px; margin-right: 0; }
+        html[dir="ltr"] .btn-primary i { margin-right: 10px; margin-left: 0; }
+
+
+        @media (max-width: 768px) {
+            .card-body { padding: 25px 20px; }
+            .card-header { padding: 25px 20px; }
+            .card-header h1 { font-size: 1.7rem; }
+            .card-header p { font-size: 0.9rem; }
+            .btn-primary { padding: 12px 30px; font-size: 0.9rem;}
+            .container { margin-top: 80px; } /* Adjust for smaller screens if lang switcher takes space */
+            .lang-switcher { font-size: 0.9rem; }
+            .lang-switcher button { padding: 3px 7px;}
+
+        }
+    </style>
+</head>
+<body>
+
+    <div class="lang-switcher">
+        <button id="lang-ar" data-lang="ar">العربية</button>
+        <button id="lang-en" data-lang="en">English</button>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1 id="mainHeading" data-lang-ar="تقييم مخاطر مرض السكري" data-lang-en="Diabetes Risk Assessment">تقييم مخاطر مرض السكري</h1>
+                <p id="subHeading" data-lang-ar="أدخل معلوماتك أدناه لحساب درجة الخطورة" data-lang-en="Enter your information below to calculate the risk score">أدخل معلوماتك أدناه لحساب درجة الخطورة</p>
+            </div>
+            <div class="card-body">
+                <form action="/predict" method="POST">
+                    <input type="hidden" name="polyuria" value="no">
+                    <input type="hidden" name="polydipsia" value="no">
+                    <input type="hidden" name="weight_loss" value="no">
+                    <input type="hidden" name="weakness" value="no">
+                    <input type="hidden" name="polyphagia" value="no">
+                    <input type="hidden" name="genital_thrush" value="no">
+                    <input type="hidden" name="visual_blurring" value="no">
+                    <input type="hidden" name="itching" value="no">
+                    <input type="hidden" name="irritability" value="no">
+                    <input type="hidden" name="delayed_healing" value="no">
+                    <input type="hidden" name="partial_paresis" value="no">
+                    <input type="hidden" name="muscle_stiffness" value="no">
+                    <input type="hidden" name="alopecia" value="no">
+                    <input type="hidden" name="obesity" value="no">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="gender" class="form-label" data-lang-ar="الجنس" data-lang-en="Gender">الجنس</label>
+                                <select class="form-select" id="gender" name="gender" required>
+                                    <option value="" disabled selected id="genderSelectDefault" data-lang-ar="اختر الجنس" data-lang-en="Select your gender">اختر الجنس</option>
+                                    <option value="male" id="genderMale" data-lang-ar="ذكر" data-lang-en="Male">ذكر</option>
+                                    <option value="female" id="genderFemale" data-lang-ar="أنثى" data-lang-en="Female">أنثى</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="age" class="form-label" data-lang-ar="العمر" data-lang-en="Age">العمر</label>
+                                <input type="number" class="form-control" id="age" name="age" 
+                                       data-placeholder-ar="أدخل عمرك" data-placeholder-en="Enter your age" placeholder="أدخل عمرك" required>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="polyuria" name="polyuria" value="yes">
+                                <label class="form-check-label" for="polyuria" data-lang-ar="كثرة التبول (Polyuria)" data-lang-en="Polyuria (Excessive Urination)">كثرة التبول (Polyuria)</label>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="polydipsia" name="polydipsia" value="yes">
+                                <label class="form-check-label" for="polydipsia" data-lang-ar="العطش المفرط (Polydipsia)" data-lang-en="Polydipsia (Excessive Thirst)">العطش المفرط (Polydipsia)</label>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="weight_loss" name="weight_loss" value="yes">
+                                <label class="form-check-label" for="weight_loss" data-lang-ar="فقدان الوزن المفاجئ" data-lang-en="Sudden Weight Loss">فقدان الوزن المفاجئ</label>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="weakness" name="weakness" value="yes">
+                                <label class="form-check-label" for="weakness" data-lang-ar="الضعف العام" data-lang-en="Weakness">الضعف العام</label>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="polyphagia" name="polyphagia" value="yes">
+                                <label class="form-check-label" for="polyphagia" data-lang-ar="الجوع المفرط (Polyphagia)" data-lang-en="Polyphagia (Excessive Hunger)">الجوع المفرط (Polyphagia)</label>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="genital_thrush" name="genital_thrush" value="yes">
+                                <label class="form-check-label" for="genital_thrush" data-lang-ar="مرض القلاع التناسلي" data-lang-en="Genital Thrush">مرض القلاع التناسلي</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="visual_blurring" name="visual_blurring" value="yes">
+                                <label class="form-check-label" for="visual_blurring" data-lang-ar="تشوش الرؤية" data-lang-en="Visual Blurring">تشوش الرؤية</label>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="itching" name="itching" value="yes">
+                                <label class="form-check-label" for="itching" data-lang-ar="الحكة" data-lang-en="Itching">الحكة</label>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="irritability" name="irritability" value="yes">
+                                <label class="form-check-label" for="irritability" data-lang-ar="التهيج والعصبية" data-lang-en="Irritability">التهيج والعصبية</label>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="delayed_healing" name="delayed_healing" value="yes">
+                                <label class="form-check-label" for="delayed_healing" data-lang-ar="تأخر التئام الجروح" data-lang-en="Delayed Healing">تأخر التئام الجروح</label>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="partial_paresis" name="partial_paresis" value="yes">
+                                <label class="form-check-label" for="partial_paresis" data-lang-ar="الشلل الجزئي (ضعف العضلات)" data-lang-en="Partial Paresis (Muscle Weakness)">الشلل الجزئي (ضعف العضلات)</label>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="muscle_stiffness" name="muscle_stiffness" value="yes">
+                                <label class="form-check-label" for="muscle_stiffness" data-lang-ar="تيبس العضلات" data-lang-en="Muscle Stiffness">تيبس العضلات</label>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="alopecia" name="alopecia" value="yes">
+                                <label class="form-check-label" for="alopecia" data-lang-ar="تساقط الشعر (الثعلبة)" data-lang-en="Alopecia (Hair Loss)">تساقط الشعر (الثعلبة)</label>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="obesity" name="obesity" value="yes">
+                                <label class="form-check-label" for="obesity" data-lang-ar="السمنة" data-lang-en="Obesity">السمنة</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4 pt-3"> 
+                        <button type="submit" class="btn btn-primary" id="submitButton">
+                            <i class="fas fa-calculator"></i> <span data-lang-ar="احسب درجة الخطورة" data-lang-en="Calculate Risk Score">احسب درجة الخطورة</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const langButtons = document.querySelectorAll('.lang-switcher button');
+            const htmlEl = document.documentElement;
+            const pageTitleEl = document.getElementById('pageTitle');
+            const bootstrapRtlCss = document.getElementById('bootstrap-rtl-css');
+
+            const translations = {
+                ar: {
+                    font: "'Cairo', sans-serif",
+                    dir: "rtl",
+                    bootstrapCss: "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.rtl.min.css",
+                    pageTitle: "تقييم مخاطر مرض السكري"
+                },
+                en: {
+                    font: "'Roboto', sans-serif",
+                    dir: "ltr",
+                    bootstrapCss: "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css", // Standard LTR bootstrap
+                    pageTitle: "Diabetes Risk Assessment"
+                }
+            };
+
+            function setLanguage(lang) {
+                if (!translations[lang]) return;
+
+                const currentLangConfig = translations[lang];
+                htmlEl.lang = lang;
+                htmlEl.dir = currentLangConfig.dir;
+                document.body.style.fontFamily = currentLangConfig.font;
+                pageTitleEl.textContent = currentLangConfig.pageTitle;
+
+                // Toggle Bootstrap CSS
+                // For simplicity, this example switches the RTL link on/off.
+                // A more robust solution might involve dynamically loading the correct full Bootstrap CSS if they significantly differ beyond RTL adjustments.
+                // Bootstrap 5's main CSS is generally good at adapting to `dir` attribute.
+                // We will enable/disable the RTL specific one.
+                if (lang === 'ar') {
+                    if(!document.getElementById('bootstrap-rtl-css')){ // if not present, add it
+                        const newLink = document.createElement('link');
+                        newLink.id = 'bootstrap-rtl-css';
+                        newLink.rel = 'stylesheet';
+                        newLink.href = translations.ar.bootstrapCss;
+                        newLink.integrity = "sha384-DOXMLfHhQkvFFp+rWTZwVlPVqdIhpDVYT9csKHSvbAtrpaddingNearStatusLightsSArestore8A";
+                        newLink.crossOrigin = "anonymous";
+                        document.head.appendChild(newLink);
+                    } else {
+                         bootstrapRtlCss.disabled = false;
+                    }
+                } else { // lang === 'en'
+                    if(bootstrapRtlCss) bootstrapRtlCss.disabled = true; // Disable RTL specific styles for LTR
+                }
+
+
+                // Update text content
+                document.querySelectorAll('[data-lang-ar]').forEach(el => {
+                    el.textContent = el.getAttribute(`data-lang-${lang}`);
+                });
+
+                // Update placeholders
+                document.querySelectorAll('[data-placeholder-ar]').forEach(el => {
+                    el.placeholder = el.getAttribute(`data-placeholder-${lang}`);
+                });
+                
+                // Update active button
+                langButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+                });
+
+                // Save preference
+                localStorage.setItem('preferredLang', lang);
+            }
+
+            langButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const lang = this.getAttribute('data-lang');
+                    setLanguage(lang);
+                });
+            });
+
+            // Load saved language or default to Arabic
+            const savedLang = localStorage.getItem('preferredLang');
+            if (savedLang && translations[savedLang]) {
+                setLanguage(savedLang);
+            } else {
+                setLanguage('ar'); // Default language
+            }
+        });
+    </script>
+</body>
+</html>
